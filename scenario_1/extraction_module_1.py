@@ -5,7 +5,6 @@ from pathlib import Path
 # this module extracts and saves restaurant details to restaurant_details.csv
 # only include restaurants with matching Country Codes from Country-Code.xlsx
 
-
 # get base directory
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -66,10 +65,18 @@ def filter_restaurant_details(preprocessed_csv_path, country_excel_path, output_
     print(f"\n Data Preview \n \n {filtered_df.head()}")
 
 
-preprocessed_csv_path = PREPROCESSED_DATA_DIR / \
-    "preprocessed_restaurant_details.csv"
-country_excel_path = RAW_DATA_DIR / "Country-Code.xlsx"
-output_csv_path = OUTPUT_DATA_DIR / "restaurant_details.csv"
+def main():
+    """
+    runs extraction module 1 standalone
+    """
+    preprocessed_csv_path = PREPROCESSED_DATA_DIR / \
+        "preprocessed_restaurant_details.csv"
+    country_excel_path = RAW_DATA_DIR / "Country-Code.xlsx"
+    output_csv_path = OUTPUT_DATA_DIR / "restaurant_details.csv"
 
-filter_restaurant_details(preprocessed_csv_path,
-                          country_excel_path, output_csv_path)
+    filter_restaurant_details(preprocessed_csv_path,
+                              country_excel_path, output_csv_path)
+
+
+if __name__ == "__main__":
+    main()

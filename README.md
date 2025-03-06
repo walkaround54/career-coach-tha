@@ -69,6 +69,32 @@ pip install -r requirements.txt
 
 ## Case Study Scenario 1
 
+### Running Scenario 1 Application
+
+Please ensure you are in the tha_stan directory in command shell or Terminal. Navigate to the scenario_1 directory using the following command:
+
+```sh
+cd scenario_1
+```
+
+Once Python, virtual environment and dependencies have been set up, run the app using the following command:
+
+```sh
+python main.py
+```
+
+This will complete each step required in the pipeline. Upon completion of the pipeline, you should see
+
+```sh
+Scenario 1 Pipeline Completed
+```
+
+To run individual modules, use the following command:
+
+```sh
+python (change module name).py
+```
+
 ### **Architecture Diagram**
 
 ![Scenario 1 Architecture Diagram](readme_images/scenario_1_architecture.jpg)
@@ -191,7 +217,7 @@ The output, **"ratings_analysis.pdf" is stored in the output/task_3 folder.**
 
 Based on the analysis conducted and primarily looking at the insights from visualization 5 and 6, the following rating text thresholds have been obtained:
 
-- Poor < 3.0
+- 0.0 <= Poor < 3.0
 - 3.0 <= Average < 3.7
 - 3.7 <= Good < 4.0
 - 4.0 <= Very Good < 4.4

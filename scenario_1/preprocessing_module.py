@@ -142,12 +142,20 @@ def json_to_event_details_csv(raw_data, output_path):
     print(f"\n Data Preview for Event Details: \n \n {event_df.head()}")
 
 
-restaurant_json_path = RAW_DATA_DIR / "restaurants.json"
-raw_data = restaurant_json_parser(restaurant_json_path)
+def main():
+    """
+    runs preprocessing module standalone
+    """
+    restaurant_json_path = RAW_DATA_DIR / "restaurants.json"
+    raw_data = restaurant_json_parser(restaurant_json_path)
 
-restaurant_details_output_path = PREPROCESSED_DATA_DIR / \
-    "preprocessed_restaurant_details.csv"
-json_to_restaurant_details_csv(raw_data, restaurant_details_output_path)
+    restaurant_details_output_path = PREPROCESSED_DATA_DIR / \
+        "preprocessed_restaurant_details.csv"
+    json_to_restaurant_details_csv(raw_data, restaurant_details_output_path)
 
-event_details_output_path = PREPROCESSED_DATA_DIR / "preprocessed_event_data.csv"
-json_to_event_details_csv(raw_data, event_details_output_path)
+    event_details_output_path = PREPROCESSED_DATA_DIR / "preprocessed_event_data.csv"
+    json_to_event_details_csv(raw_data, event_details_output_path)
+
+
+if __name__ == "__main__":
+    main()

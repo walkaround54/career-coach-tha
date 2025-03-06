@@ -73,12 +73,19 @@ def filter_events_by_date(preprocessed_csv_path, output_path, start_date, end_da
         f"\nData Preview for Events from {start_date} to {end_date}\n\n{filtered_df.head()}")
 
 
-preprocessed_event_csv_path = PREPROCESSED_DATA_DIR / "preprocessed_event_data.csv"
-output_event_csv_path = OUTPUT_DATA_DIR / "restaurant_events.csv"
+def main():
+    """
+    runs extraction module 2 standalone
+    """
+    preprocessed_event_csv_path = PREPROCESSED_DATA_DIR / "preprocessed_event_data.csv"
+    output_event_csv_path = OUTPUT_DATA_DIR / "restaurant_events.csv"
 
-# enter start date and end date in YYYY-MM-DD format
-start_date = "2019-04-01"
-end_date = "2019-04-30"
+    start_date = "2019-04-01"
+    end_date = "2019-04-30"
 
-filter_events_by_date(preprocessed_event_csv_path,
-                      output_event_csv_path, start_date, end_date)
+    filter_events_by_date(preprocessed_event_csv_path,
+                          output_event_csv_path, start_date, end_date)
+
+
+if __name__ == "__main__":
+    main()
