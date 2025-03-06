@@ -99,12 +99,23 @@ python (change module name).py
 
 ![Scenario 1 Architecture Diagram](readme_images/scenario_1_architecture.jpg)
 
-Scenario 1's Architecture consists of 4 layers:
+**Scenario 1's Architecture consists of 4 layers:**
 
 1. Raw Data Layer
+
+- Contains unprocessed Zomato Restaurant Data and Country Excel Data
+
 2. Preprocessing Layer
+
+- Contains Preprocessing Module that reads raw data and writes relevant data to csv file
+
 3. Extraction and Data Manipulation Layer
+
+- Extraction Module 1, Extraction Module 2 and Analysis Module extract and manipulate preprocessed data
+
 4. Output Layer
+
+- Contains files generated from extraction and data manipulation layer
 
 **Why have a preprocessing module?**
 Upon creating and using the "inspect_json" function (now found in preprocessing_module.py), it is evident that the JSON data structure is messy and difficult to parse.
@@ -222,3 +233,47 @@ Based on the analysis conducted and primarily looking at the insights from visua
 - 3.7 <= Good < 4.0
 - 4.0 <= Very Good < 4.4
 - 4.4 <= Excellent <= 5.0
+
+## Case Study Scenario 2
+
+### **Architecture Diagram**
+
+![Scenario 2 Architecture Diagram](readme_images/scenario_2_architecture.jpg)
+
+**Scenario 2's Architecture consists of the following components:**
+
+1. CLI Module for both Input and Output
+
+- This module contains the information to be displayed on the CLI
+- User selection choices and input choices are determined here
+
+2. CSV Processing Module
+
+- This module processes and cleans raw static carpark csv data
+
+3. API Fetcher Module
+
+- This module will fetch Live Carpark API data
+
+4. Merged Data Processing Module
+
+- This module ingests, merges and cleans Live API Data and static processed carpark data
+
+5. User Input Handling Module
+
+- This module will take user input, and validate if it **fuzzily** matches static carpark data first
+- If the carpark/location can be fuzzily matched, it calls the API Fetcher Module (module 3) to fetch Live API Data, and then calls Merged Data Procesing Module (module 4) to reprocess the newly fetched Live API Data
+
+**Why use fuzzy matching for validation?**
+
+The "fuzzywuzzy" package allows for fuzzy matching of user inputted data, and provides an approximate match score.
+
+This allows for obviously incorrect addresses or carpark numbers, i.e a string of random gibberish "xcmvnenFFFds" to be filtered away.
+
+Only matches that hit a certain match score i.e 85% match will be displayed, allowing graceful handling of user input errors.
+
+**Why only fetch Live API Data when input validated?**
+
+This prevents excessive API calls that will slow down the application or unnecessarily add to the API retrieval rate limit.
+
+### Scenario 2 Task 1
