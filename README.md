@@ -308,6 +308,26 @@ This is so there will be minimal rows with no merged API data.
 
 This prevents excessive API calls that will slow down the application or unnecessarily add to the API retrieval rate limit.
 
+### **Potential Architecture Diagram with Cloud Services Integrated**
+
+![Scenario 2 Cloud Architecture](readme_images/scenario_2_images/scenario_2_cloud_architecture.jpg)
+
+The Updated Architecture with Cloud Services incorporates the following services:
+
+1. Amazon API Gateway
+2. AWS Lambda
+3. Amazon DynamoDB
+
+For Scenario 2, integrating cloud services assumes the need for a low-latency, highly available, and scalable solution, given the requirement to handle numerous simultaneous API requests in near real time.
+
+When a user submits a request, it is first received by **Amazon API Gateway**, which validates, secures, and processes the request. API Gateway also prevents excessive API calls and ensures fair compute resource distribution across users.
+
+The request is then forwarded to **AWS Lambda**, which extracts the query and sends a request to Amazon DynamoDB to fetch the latest carpark availability data. **Amazon DynamoDB** is optimized for near real time response, and can dynamically scale to handle fluctuating traffic loads, making it ideal for real time data retrieval. Since DynamoDB is a NoSQL key value database, it efficiently handles semi-structured JSON data, eliminating the need for complex join operations, thus reducing processing overhead.
+
+Once the data is retrieved, AWS Lambda formats it into a structured JSON response and returns it to Amazon API Gateway, which then forwards the response to the user's device. This ensures the user receives up-to-date carpark availability information with minimal latency.
+
+This cloud architecture provides scalability and high availability and ensures near real time retrieval of carpark availability queries.
+
 ### Scenario 2 Tasks 1,2 and 3
 
 Since the 3 tasks have some overlap i.e task 1: handle data validation and cleaning, task 2: query/search by address (I want the search to be validated first before searching), the completion of Scenario 2 will instead be broken down into discussion of the respective modules.
