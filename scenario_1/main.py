@@ -5,6 +5,8 @@ from extraction_module_1 import filter_restaurant_details
 from extraction_module_2 import filter_events_by_date
 from analysis_module import analyze_ratings
 
+# run this to run the app for scenario 1
+
 # get base directory
 BASE_DIR = Path(__file__).resolve().parent
 

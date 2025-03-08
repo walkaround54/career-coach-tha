@@ -159,38 +159,37 @@ For the **Extraction and Data Manipulation** layer, since the volume of data is 
 
 ### Scenario 1 Task 1
 
-To complete task 1, the preprocessed restaurant data from the preprocessing module is utilised as the data source. "extraction_module_1.py" consists of a "load_country_codes" function and "filter_restaurant_details" function.
-
-The "load_country_codes" that will take an excel path of country code mappings as input and output a dictionary of country code mappings.
-
-The "filter_restaurant_details" will make use of the "load_country_codes" function to take in a country code mapping and preprocessed restaurant data to output only restaurants that have a valid country code mapping. Empty fields are populated with "NA".
-
-The output, "restaurant_details.csv" is stored in the output/task_1 folder.
+- Preprocessed restaurant data from the preprocessing module is utilised as the data source.
+- "extraction_module_1.py" consists of a "load_country_codes" function and "filter_restaurant_details" function
+- The "load_country_codes" will take an excel path of country code mappings as input and output a dictionary of country code mappings.
+- The "filter_restaurant_details" will make use of the "load_country_codes" function to take in a country code mapping and preprocessed restaurant data to output only restaurants that have a valid country code mapping.
+  - Empty fields are populated with "NA".
+- The output, "restaurant_details.csv" is stored in the output/task_1 folder.
 
 ### Scenario 1 Task 2
 
-Preprocessed event data from the preprocessing module is utilised as the data source. "extraction_module_2.py" consists of a "filter_events_by_date" function.
+- Preprocessed event data from the preprocessing module is utilised as the data source.
+- "extraction_module_2.py" consists of a "filter_events_by_date" function.
+- The "filter_events_by_date" function takes in preprocessed event data, and a date range to filter events by.
+  - It will output events that have fall within the given date range.
+- To handle events with either a valid start or end date, but not both, the following logic was included.
 
-The "filter_events_by_date" function takes in preprocessed event data, and a date range to filter events by. It will output events that have fall within the given date range.
-
-To handle events with either a valid start or end date, but not both, the following logic was included.
 ![Event Filter by Date Logic](readme_images/event_filter.jpg)
 **Logic to allow permutations of valid start and end date, valid start but invalid end date, valid end but invalid start date**
 
-For this task, the date range is set for dates that fall within April 2019.
-
-The output, "restaurant_events.csv" is stored in the output/task_2 folder.
+- For this task, the date range is set for dates that fall within April 2019.
+- The output, "restaurant_events.csv" is stored in the output/task_2 folder.
 
 ### Scenario 1 Task 3
 
-Output data from task 1, "restaurant_details.csv" is used as the data source.
-
-"analysis_module.py" reads the restaurant details data, and inspects the unique rating_text values. Since there are rating_texts that are not in English and restaurants that are not rated, the non English ratings would be mapped to either of the "Excellent, Very Good, Good, Average, Poor" categories and entries without ratings would be removed.
+- Output data from task 1, "restaurant_details.csv" is used as the data source.
+- "analysis_module.py" reads the restaurant details data, and inspects the unique rating_text values.
+  - Since there are rating_texts that are not in English and restaurants that are not rated, the non English ratings would be mapped to either of the "Excellent, Very Good, Good, Average, Poor" categories and entries without ratings would be removed.
 
 ![Text Rating Mapping](readme_images/text_rating_mapping.jpg)
 **Mapping Non English Text Ratings**
 
-The output, **"ratings_analysis.pdf" is stored in the output/task_3 folder.**
+- The output, **"ratings_analysis.pdf" is stored in the output/task_3 folder.**
 
 **The following 6 data visualizations were used to analyse and determine rating text thresholds. The insights from each visualization are also listed:**
 
@@ -236,33 +235,60 @@ Based on the analysis conducted and primarily looking at the insights from visua
 
 ## Case Study Scenario 2
 
+### Running Scenario 2 Application
+
+Please ensure you are in the tha_stan directory in command shell or Terminal. Navigate to the scenario_2 directory using the following command:
+
+```sh
+cd scenario_2
+```
+
+Once Python, virtual environment and dependencies have been set up, run the app using the following command:
+
+```sh
+python main.py
+```
+
+This will open the Scenario 2 **"Carpark Search System"** App. You should see the following:
+
+![Scenario 2 App Running](readme_images/scenario_2_app_running.jpg)
+
+You can begin querying for carpark by Carpark Number or Address.
+
 ### **Architecture Diagram**
 
-![Scenario 2 Architecture Diagram](readme_images/scenario_2_architecture.jpg)
+![Scenario 2 Architecture Diagram](readme_images/scenario_2_architecture_remerged.jpg)
 
 **Scenario 2's Architecture consists of the following components:**
 
-1. CLI Module for both Input and Output
-
-- This module contains the information to be displayed on the CLI
-- User selection choices and input choices are determined here
-
-2. CSV Processing Module
+1. CSV Processing Module
 
 - This module processes and cleans raw static carpark csv data
 
-3. API Fetcher Module
+2. API Fetcher Module
 
-- This module will fetch Live Carpark API data
+- This module will fetch and preprocess Live Carpark API data
 
-4. Merged Data Processing Module
+3. (Re)Merged Data Processing Module
 
 - This module ingests, merges and cleans Live API Data and static processed carpark data
+- **Subsequently, merged data will be used for new remerges so the most updated API information is obtained even if API cannot fetch information for some carparks**
+- If some carpark data is missing in newly fetched API data, old rows without information updates are kept while rows with updated information are remerged
 
-5. User Input Handling Module
+4. User Input Handling Module
 
-- This module will take user input, and validate if it **fuzzily** matches static carpark data first
-- If the carpark/location can be fuzzily matched, it calls the API Fetcher Module (module 3) to fetch Live API Data, and then calls Merged Data Procesing Module (module 4) to reprocess the newly fetched Live API Data
+- This module will take user input, and validate if it matches static carpark data first
+  - If search is by address, it will be **fuzzily** matched instead of exact matched
+- If the carpark number/address can be matched/fuzzily matched, it calls the API Fetcher Module (module 3) to fetch Live API Data, and then calls Merged Data Procesing Module (module 4) to reprocess the newly fetched Live API Data
+
+5. CLI Module for both Input and Output
+
+- This module contains the information to be displayed on the CLI
+- User selection choices and input choices are determined here
+- User can only use keyboard inputs and select options according to what is displayed on the CLI i.e "Enter '1' to query by Car Park Number"
+- Invalid inputs will throw errors
+
+More details for each of the modules will be provided below.
 
 **Why use fuzzy matching for validation?**
 
@@ -272,8 +298,91 @@ This allows for obviously incorrect addresses or carpark numbers, i.e a string o
 
 Only matches that hit a certain match score i.e 85% match will be displayed, allowing graceful handling of user input errors.
 
+**Why merge on already merged data instead of merging freshly fetched Live API data with static carpark data?**
+
+As mentioned in the description for the (Re)Merged Data Processing Module (module 4), if some carpark data is missing in newly fetched API data, old rows without information updates are kept while rows with updated information are remerged.
+
+This is so there will be minimal rows with no merged API data.
+
 **Why only fetch Live API Data when input validated?**
 
 This prevents excessive API calls that will slow down the application or unnecessarily add to the API retrieval rate limit.
 
-### Scenario 2 Task 1
+### Scenario 2 Tasks 1,2 and 3
+
+Since the 3 tasks have some overlap i.e task 1: handle data validation and cleaning, task 2: query/search by address (I want the search to be validated first before searching), the completion of Scenario 2 will instead be broken down into discussion of the respective modules.
+
+**Module 1: static_carpark_processing_module.py (CSV Processing Module)**
+
+- Reads raw static carpark data as input
+- Consists of the "process_static_carpark_data" function that checks for missing values, drops duplicate entries
+- The output is saved in the processed_data folder as "processed_static_carpark_data.csv"
+- This module is **not called** in main.py as it assumes the static data will be updated very infrequently, so it is only processed once
+
+**Module 2: carpark_api_fetcher_module.py (API Fetcher Module)**
+
+- Consists of "fetch_capark_availability", "get_lot_types" and "save_carpark_api_data" function
+- "fetch_capark_availability" attempts to fetch API data for carpark availability and allows for configuration of retries, delay and timeout
+- "get_lot_types" is a helper function that obtains the list of lot types from fetched API carpark data dynamically
+- "save_carpark_api_data" function takes in fetched API carpark data, extracts the relevant data, and writes it to a csv file stored under the preprocessed_data folder as "api_carpark_data.csv"
+
+![Processing Different Lot Types](readme_images/save_to_csv_lot_type.jpg)
+**As there could be multiple rows for same car_park_no but different lot_type, all lot_type data for the same car_park_no was included as a singular row**
+
+**Module 3: merged_data_processing_module.py ((Re)Merged Data Processing Module)**
+
+- Takes static carpark data and fetched and preprocessed Live API data as input
+- Consists of "load_csv", "merge_initial" and "update_merged" functions
+- "load_csv" is a generic helper function loads a csv file to a pandas dataframe. It will indicate if no data from the filepath is found.
+- "merge_initial" will perform the initial merge of static carpark data with API data (if no previous merged file exists)
+  - Uses a left join on car_park_no to ensure all static carparks are retained
+  - null column entries are populated with "Data Not Available" instead of "NA" as it assumes it is simply the API not fetching the data for that specific carpark
+  - Output is saved to processed_data folder as "processed_merged_data.csv"
+- "updated_merged" function updates the existing merged dataset by incorporating new API data
+  - **It will only update rows if the API data has a more recent timestamp**
+  - Rationale for this is if for example, latest API call cannot fetch data for carpark x, **carpark x which has entry in old processed_merged_data.csv will retain original time and lot availability data instead of being overwritten with "Data Not Available"**
+  - Output is also saved to processed_data folder as "processed_merged_data.csv"
+
+![Logic for Updating Merged Rows](readme_images/logic_update_datetime.jpg)
+**Logic for Updating Merged Rows based on Update Datetime**
+
+**Module 4: user_input_handling_module.py (User Input Handling Module)**
+
+- Takes processed static carpark data and processed merged data as input
+- Consists of the "load_static_data", "validate_carpark_number", "fuzzy_match_address" and "handle_user_input" functions
+- "load_static_data" is a helper function that loads a csv file to a pandas dataframe. It will indicate if no data from the filepath is found.
+- "validate_carpark_number" is a helper function that validates if user inputted carpark number exists in static data and is case insensitive
+
+![Match Carpark Number Validation](readme_images/match_carpark_number.jpg)
+**"validate_carpark_number" will standardize the user input capitalization first match**
+
+- "fuzzy_match_address" uses the "fuzzywuzzy" module to assign a confidence score to each user inputted Address query, computed by comparing the input against the static carpark data Addresses
+- **It will return the top 5 matches by confidence/match score if the user inputted address is not exact**
+- The user can choose from the top 5 closest matches, or attempt to enter another search query/return to main menu.
+
+![Fuzzy Matching](readme_images/fuzzy_matching.jpg)
+**Logic for Fuzzy Matched Address Query Results**
+
+- The "handle_user_input" function triggers appropriate modules and functions based on user input
+- It dictates the user flow for the CLI app, and calls upon other modules and functions to fetch capark availability data based on the queries entered, i.e fetch Live API data if carpark number entered has exact match with static carpark data
+
+![User Flow Snippet](readme_images/user_flow_snippet.jpg)
+**Snippet of User Flow Dictation**
+
+![User Flow Snippet 2](readme_images/user_flow_snippet_2.jpg)
+**Snippet of Carpark API Being Called After Valid User Input**
+
+\*\*Module 5: cli_module.py (CLI Module for both Input and Output)
+
+- Lists the items to be displayed for the CLI before and after user input
+- Consists of "display_results" and "display_menu" function
+- "display_results" takes a pandas dataframe of queried results and displays details to the user
+
+![CLI Display](readme_images/cli_results.jpg)
+**Snippet for code determining how results are displayed**
+
+- "display_menu" displays the main menu options to the user
+
+![CLI Menu](readme_images/cli_menu.jpg)
+
+**Menu Display code**
