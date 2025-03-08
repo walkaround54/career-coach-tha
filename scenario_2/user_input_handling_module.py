@@ -2,8 +2,8 @@ import pandas as pd
 from pathlib import Path
 from fuzzywuzzy import process
 from cli_module import display_results, display_menu
-import carpark_api_fetcher_module as carpark_api_fetcher_module
-import merged_data_processing_module as merged_data_processing_module
+import carpark_api_fetcher_module
+import merged_data_processing_module
 
 # Set base directories
 BASE_DIR = Path(__file__).resolve().parent

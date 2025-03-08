@@ -97,7 +97,7 @@ python (change module name).py
 
 ### **Architecture Diagram**
 
-![Scenario 1 Architecture Diagram](readme_images/scenario_1_architecture.jpg)
+![Scenario 1 Architecture Diagram](readme_images/scenario_1_images/scenario_1_architecture.jpg)
 
 **Scenario 1's Architecture consists of 4 layers:**
 
@@ -120,7 +120,7 @@ python (change module name).py
 **Why have a preprocessing module?**
 Upon creating and using the "inspect_json" function (now found in preprocessing_module.py), it is evident that the JSON data structure is messy and difficult to parse.
 
-![Inspect JSON Preview](readme_images/inspect_json_preview.jpg)
+![Inspect JSON Preview](readme_images/scenario_1_images/inspect_json_preview.jpg)
 
 **Preview of JSON Structure**
 
@@ -130,12 +130,12 @@ Additional fields to be saved to the "preprocessing_csv" can be included accordi
 
 Duplicate restaurants and events are dropped here, with restaurants requiring an exact match to be dropped since it is possible a restaurant changes cuisine or location over time. For events, only the restaurant id, event name and event date need to match for it to be considered a duplicate entry.
 
-![Drop duplicate events](readme_images/dropping_event_duplicates.jpg)
+![Drop duplicate events](readme_images/scenario_1_images/dropping_event_duplicates.jpg)
 **Conditions for Events to be considered Duplicate**
 
 ### **Potential Architecture Diagram with Cloud Services Integrated**
 
-![Scenario 1 Cloud Architecture](readme_images/scenario_1_cloud_architecture.jpg)
+![Scenario 1 Cloud Architecture](readme_images/scenario_1_images/scenario_1_cloud_architecture.jpg)
 
 The Updated Architecture with Cloud Services now consists of 5 layers:
 
@@ -174,7 +174,7 @@ For the **Extraction and Data Manipulation** layer, since the volume of data is 
   - It will output events that have fall within the given date range.
 - To handle events with either a valid start or end date, but not both, the following logic was included.
 
-![Event Filter by Date Logic](readme_images/event_filter.jpg)
+![Event Filter by Date Logic](readme_images/scenario_1_images/event_filter.jpg)
 **Logic to allow permutations of valid start and end date, valid start but invalid end date, valid end but invalid start date**
 
 - For this task, the date range is set for dates that fall within April 2019.
@@ -186,7 +186,7 @@ For the **Extraction and Data Manipulation** layer, since the volume of data is 
 - "analysis_module.py" reads the restaurant details data, and inspects the unique rating_text values.
   - Since there are rating_texts that are not in English and restaurants that are not rated, the non English ratings would be mapped to either of the "Excellent, Very Good, Good, Average, Poor" categories and entries without ratings would be removed.
 
-![Text Rating Mapping](readme_images/text_rating_mapping.jpg)
+![Text Rating Mapping](readme_images/scenario_1_images/text_rating_mapping.jpg)
 **Mapping Non English Text Ratings**
 
 - The output, **"ratings_analysis.pdf" is stored in the output/task_3 folder.**
@@ -251,13 +251,13 @@ python main.py
 
 This will open the Scenario 2 **"Carpark Search System"** App. You should see the following:
 
-![Scenario 2 App Running](readme_images/scenario_2_app_running.jpg)
+![Scenario 2 App Running](readme_images/scenario_2_images/scenario_2_app_running.jpg)
 
 You can begin querying for carpark by Carpark Number or Address.
 
 ### **Architecture Diagram**
 
-![Scenario 2 Architecture Diagram](readme_images/scenario_2_architecture_remerged.jpg)
+![Scenario 2 Architecture Diagram](readme_images/scenario_2_images/scenario_2_architecture_remerged.jpg)
 
 **Scenario 2's Architecture consists of the following components:**
 
@@ -326,7 +326,7 @@ Since the 3 tasks have some overlap i.e task 1: handle data validation and clean
 - "get_lot_types" is a helper function that obtains the list of lot types from fetched API carpark data dynamically
 - "save_carpark_api_data" function takes in fetched API carpark data, extracts the relevant data, and writes it to a csv file stored under the preprocessed_data folder as "api_carpark_data.csv"
 
-![Processing Different Lot Types](readme_images/save_to_csv_lot_type.jpg)
+![Processing Different Lot Types](readme_images/scenario_2_images/save_to_csv_lot_type.jpg)
 **As there could be multiple rows for same car_park_no but different lot_type, all lot_type data for the same car_park_no was included as a singular row**
 
 **Module 3: merged_data_processing_module.py ((Re)Merged Data Processing Module)**
@@ -343,7 +343,7 @@ Since the 3 tasks have some overlap i.e task 1: handle data validation and clean
   - Rationale for this is if for example, latest API call cannot fetch data for carpark x, **carpark x which has entry in old processed_merged_data.csv will retain original time and lot availability data instead of being overwritten with "Data Not Available"**
   - Output is also saved to processed_data folder as "processed_merged_data.csv"
 
-![Logic for Updating Merged Rows](readme_images/logic_update_datetime.jpg)
+![Logic for Updating Merged Rows](readme_images/scenario_2_images/logic_update_datetime.jpg)
 **Logic for Updating Merged Rows based on Update Datetime**
 
 **Module 4: user_input_handling_module.py (User Input Handling Module)**
@@ -353,36 +353,106 @@ Since the 3 tasks have some overlap i.e task 1: handle data validation and clean
 - "load_static_data" is a helper function that loads a csv file to a pandas dataframe. It will indicate if no data from the filepath is found.
 - "validate_carpark_number" is a helper function that validates if user inputted carpark number exists in static data and is case insensitive
 
-![Match Carpark Number Validation](readme_images/match_carpark_number.jpg)
+![Match Carpark Number Validation](readme_images/scenario_2_images/match_carpark_number.jpg)
 **"validate_carpark_number" will standardize the user input capitalization first match**
 
 - "fuzzy_match_address" uses the "fuzzywuzzy" module to assign a confidence score to each user inputted Address query, computed by comparing the input against the static carpark data Addresses
 - **It will return the top 5 matches by confidence/match score if the user inputted address is not exact**
 - The user can choose from the top 5 closest matches, or attempt to enter another search query/return to main menu.
 
-![Fuzzy Matching](readme_images/fuzzy_matching.jpg)
+![Fuzzy Matching](readme_images/scenario_2_images/fuzzy_matching.jpg)
 **Logic for Fuzzy Matched Address Query Results**
 
 - The "handle_user_input" function triggers appropriate modules and functions based on user input
 - It dictates the user flow for the CLI app, and calls upon other modules and functions to fetch capark availability data based on the queries entered, i.e fetch Live API data if carpark number entered has exact match with static carpark data
 
-![User Flow Snippet](readme_images/user_flow_snippet.jpg)
+![User Flow Snippet](readme_images/scenario_2_images/user_flow_snippet.jpg)
 **Snippet of User Flow Dictation**
 
-![User Flow Snippet 2](readme_images/user_flow_snippet_2.jpg)
+![User Flow Snippet 2](readme_images/scenario_2_images/user_flow_snippet_2.jpg)
 **Snippet of Carpark API Being Called After Valid User Input**
 
-\*\*Module 5: cli_module.py (CLI Module for both Input and Output)
+**Module 5: cli_module.py (CLI Module for both Input and Output)**
 
 - Lists the items to be displayed for the CLI before and after user input
 - Consists of "display_results" and "display_menu" function
 - "display_results" takes a pandas dataframe of queried results and displays details to the user
 
-![CLI Display](readme_images/cli_results.jpg)
+![CLI Display](readme_images/scenario_2_images/cli_results.jpg)
 **Snippet for code determining how results are displayed**
 
 - "display_menu" displays the main menu options to the user
 
-![CLI Menu](readme_images/cli_menu.jpg)
+![CLI Menu](readme_images/scenario_2_images/cli_menu.jpg)
 
 **Menu Display code**
+
+## Unit Testing
+
+Apologies, the testing section is not very well flushed out due to time constraints!
+
+### Scenario 1 Unit Testing
+
+Unit tests have been written for the "preprocessing_module", "extraction_module_1" and "analysis_module", and can be found in the tests folder.
+
+1. For "preprocessing_module", fake JSON data is created and the test file validates whether this data is retrieved properly by the "json_to_restaurant_details_csv" and "json_to_event_details_csv" function.
+
+![API Tests](readme_images/scenario_1_images/json_test.jpg)
+**Unit Test for Preprocessing Module**
+
+2. For "extraction_module_1", fake restaurant data and country mapping data is created and the test file validates whether the data is properly extracted and processed by the "filter_restaurant_details" function.
+
+![Extraction Tests](readme_images/scenario_1_images/extraction_test.jpg)
+**Unit Test for Extraction Module**
+
+3. For "analysis_module", the test file validates if the restaurant data is properly processed and the plots are properly generated.
+   **While the analysis_module works with larger datasets, it is found that when there are a lack of datapoints, i.e insufficient to get standard deviation or lacking ratings from certain rating_text categories, the current code will not plot the data.**
+
+Due to time constraints, this issue not yet been addressed.
+
+![Analysis Test Data](readme_images/scenario_1_images/analysis_test_data.jpg)
+**Sparse Analysis Test Data that leads to Unit Test Error**
+
+![Analysis Test Error](readme_images/scenario_1_images/not_enough_data_analysis.jpg)
+**No standard deviation so could not plot data visualizations**
+
+To run the unit tests, ensure you are in the scenario_1 directory. Use the command
+
+```sh
+pytest tests/
+```
+
+You should see that the tests are run and passed for the preprocessing and extraction module 1, but fails for the analysis module.
+
+![Scenario 1 Testing](readme_images/scenario_1_images/scenario_1_test_results.jpg)
+**Unit tests running for preprocessing, extraction module 1 and analysis module**
+
+### Scenario 2 Unit Testing
+
+Unit tests have been written for the "merged_data_processing_module", "cli_module" and "carpark_api_fetcher_module", and can be found in the tests folder.
+
+1. For "carpark_api_fetcher_module", fake API data is received and the test file validates whether this data is retrieved properly by the "fetch_carpark_availability" function.
+
+![API Tests](readme_images/scenario_2_images/api_test.jpg)
+**Unit Test for API Module**
+
+2. For "merged_data_processing_module", fake merged data and API data is merged and the test file validates whether the data is properly merged by the "update_merged" function.
+
+![Merge Tests](readme_images/scenario_2_images/merge_test.jpg)
+**Unit Test for Merge Processing Module**
+
+3. For "cli_module", the test file validates if the CLI menu is properly displayed for users.
+
+![Menu Tests](readme_images/scenario_2_images/menu_test.jpg)
+**Unit Test for CLI Module**
+
+To run the unit tests, ensure you are in the scenario_2 directory. Use the command
+
+```sh
+pytest tests/
+```
+
+You should see that the tests are run and passed for the following modules.
+
+![Scenario 2 Testing](readme_images/scenario_2_images/scenario_2_tests.jpg)
+**Unit tests running for carpark_api_fetcher, cli_module and merged_data_processing_module**
